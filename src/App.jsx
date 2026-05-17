@@ -4,29 +4,6 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 const SUPABASE_URL = "https://iptpynpbgktwzvgnbvcx.supabase.co";
 const SUPABASE_KEY = "sb_publishable_7gVjYC98eAk664wHt_eUBQ_bvtfv5ee";
 
-const INITIAL_TRADES = [
-  { id: 1, date: "2026-01-19", stock: "佶優", buyPrice: 37.1, sellPrice: 34.0, shares: 1000, buyTime: null, sellTime: null, pnl: -3229, status: "closed", entryReason: "原因不明", exitReason: "原因不明", accuracy: "❌", note: "虧損-3,229元，進出場原因不明" },
-  { id: 2, date: "2026-01-21", stock: "台玻", buyPrice: 53.5, sellPrice: 66.0, shares: 1000, buyTime: null, sellTime: null, pnl: 12255, status: "closed", entryReason: "原因不明", exitReason: "原因不明", accuracy: "✅", note: "獲利+12,255元，為本期最大獲利" },
-  { id: 3, date: "2026-03-04", stock: "陽明 2609", buyPrice: 68.0, sellPrice: 55.2, shares: 1000, buyTime: null, sellTime: null, pnl: -13014, status: "closed", entryReason: "原因不明", exitReason: "融券回補日落空，大盤跌近3%，五檔委賣2,976 vs 委買942，跌破58元停損執行", accuracy: "⚠️", note: "進場成本68元過高，本期最大虧損" },
-  { id: 4, date: "2026-03-06", stock: "台塑化", buyPrice: 60.6, sellPrice: 62.0, shares: 500, buyTime: null, sellTime: null, pnl: 583, status: "closed", entryReason: "原因不明", exitReason: "原因不明", accuracy: "✅", note: "小幅獲利+583元" },
-  { id: 5, date: "2026-03-06", stock: "凱基金", buyPrice: 20.4, sellPrice: 19.45, shares: 1000, buyTime: null, sellTime: null, pnl: -1023, status: "closed", entryReason: "原因不明", exitReason: "原因不明", accuracy: "❌", note: "虧損-1,023元" },
-  { id: 6, date: "2026-03-11", stock: "南茂 8150", buyPrice: 63.0, sellPrice: 63.3, shares: 500, buyTime: null, sellTime: null, pnl: 32, status: "closed", entryReason: "原因不明", exitReason: "大盤走弱，零股流動性極差，保本出場保留子彈", accuracy: "⚠️", note: "保本出場決策正確，獲利僅+32元" },
-  { id: 7, date: "2026-03-11", stock: "長榮航 2618", buyPrice: 33.8, sellPrice: 33.85, shares: 300, buyTime: null, sellTime: null, pnl: -23, status: "closed", entryReason: "原因不明", exitReason: "大盤持續走弱，航空股動能不足，小虧出場", accuracy: "⚠️", note: "出場決策正確，損失極小-23元" },
-  { id: 8, date: "2026-03-11", stock: "聯電 2303", buyPrice: 62.1, sellPrice: 59.8, shares: 232, buyTime: null, sellTime: null, pnl: -585, status: "closed", entryReason: "TFLN矽光子三方合作，AI資料中心1.6T光傳輸市場，聯電自身故事非跟漲", exitReason: "試撮價59.9元跌破61元停損線，費半-3.43%，MA全空頭排列，果斷停損", accuracy: "⚠️", note: "停損執行正確果斷，但進場時機偏早" },
-  { id: 9, date: "2026-03-17", stock: "大研生醫 7780", buyPrice: 19.25, sellPrice: 20.0, shares: 1000, buyTime: null, sellTime: null, pnl: 676, status: "closed", entryReason: "原因不明", exitReason: "發現配息邏輯落空（發放率1,105%不可持續），庫藏股護盤首日漲停20元果斷出場", accuracy: "✅", note: "正確識別風險並把握庫藏股護盤機會出場" },
-  { id: 10, date: "2026-03-19", stock: "廣達 2382", buyPrice: 289.0, sellPrice: null, shares: 60, buyTime: "09:10", sellTime: null, pnl: 0, status: "closed", entryReason: "外資持續買超，AI伺服器組裝龍頭，週線MA全上，大盤跌-1.28%仍收+0.68%最抗跌", exitReason: "外資單日大買33,611張，台積電法說前卡位，4/10分批出場（323.5元+315元）", accuracy: "✅", note: "進場判斷準確，分批出場策略有效，獲利+1,746元" },
-  { id: 11, date: "2026-03-19", stock: "力積電 6770", buyPrice: 75.0, sellPrice: 57.4, shares: 200, buyTime: null, sellTime: null, pnl: -3563, status: "closed", entryReason: "半導體景氣復甦預期，短線技術面反彈訊號（進場理由薄弱）", exitReason: "外資5日賣超17萬張，持股比例從65%崩跌至12%，基本面連續兩年EPS虧損，停損", accuracy: "❌", note: "進場原因薄弱，基本面虧損未評估，籌碼崩壞後停損過慢" },
-  { id: 12, date: "2026-03-20", stock: "緯創 3231", buyPrice: 130.5, sellPrice: 135.0, shares: 210, buyTime: "09:10", sellTime: null, pnl: 839, status: "closed", entryReason: "外資單日大買+11,924張，週線KDJ超賣J值-11.91，大盤跌但外資選擇性進場", exitReason: "五檔賣壓89,070股遠大於買盤4,993股，原掛136元未成交，即時刪單改135元", accuracy: "✅", note: "籌碼訊號準確，即時調整掛單價執行靈活" },
-  { id: 13, date: "2026-03-23", stock: "日月光 3711", buyPrice: 344.5, sellPrice: null, shares: 80, buyTime: "09:10", sellTime: null, pnl: 0, status: "closed", entryReason: "CoWoS先進封裝最大外包受益者，外資持股78%+5日買超4,524張，ADR+3.86%", exitReason: "分兩批：4/08以384.5元(40股)，4/14以387元(40股)，法說前後卡位行情趁高鎖利", accuracy: "✅", note: "題材+籌碼+ADR三重確認，分批出場執行優秀，獲利+3,186元" },
-  { id: 14, date: "2026-03-26", stock: "鴻海 2317", buyPrice: 204.5, sellPrice: 206.0, shares: 120, buyTime: "09:10", sellTime: null, pnl: 88, status: "closed", entryReason: "17位外資分析師全數買入，蘋果ADR+2.13%，費半大漲，AI伺服器題材", exitReason: "台積電法說正面，股價反彈至206元接近損益兩平，持有19天少量獲利避免反虧", accuracy: "⚠️", note: "方向正確但獲利僅+88元，持有19天效益不佳" },
-  { id: 15, date: "2026-04-09", stock: "00830", buyPrice: 59.45, sellPrice: 63.5, shares: 300, buyTime: "09:10", sellTime: "09:10", pnl: 2264, status: "closed", entryReason: "費半止跌反彈，台積電法說前卡位，ETF交易稅0.1%成本優，費半站上8,500點", exitReason: "台積電ADR+3.15%，費半站上9,013點，法說正面，5天獲利6.62%，63.5元出場", accuracy: "✅", note: "時機掌握精準，ETF降低交易成本，開盤09:10成交" },
-  { id: 16, date: "2026-02-26", stock: "中信金 2891（第一批）", buyPrice: 55.8, sellPrice: 53.4, shares: 500, buyTime: null, sellTime: "09:10:08", pnl: -1315, status: "closed", entryReason: "投信連續大幅買超，金融股防禦性強，美元走弱有利", exitReason: "法人5日賣超-88,085張，籌碼惡化，MA三線向下死叉，09:10:08分三筆停損", accuracy: "❌", note: "外資與投信方向相反為危險訊號，應更早識別停損" },
-  { id: 17, date: "2026-04-16", stock: "中信金 2891（第二批）", buyPrice: 55.8, sellPrice: 53.0, shares: 500, buyTime: null, sellTime: "13:23~13:25", pnl: -1430, status: "closed", entryReason: "同上，剩餘500股持倉", exitReason: "下午盤13:23~13:25分六筆成交，流動性極差，籌碼無改善全部出清", accuracy: "❌", note: "下午盤零股流動性極差分6筆，停損應在上午執行" },
-  { id: 18, date: "2026-04-09", stock: "國泰金 2882", buyPrice: 72.9, sellPrice: 75.2, shares: 200, buyTime: null, sellTime: "09:10", pnl: 374, status: "closed", entryReason: "投信5日買超13,723張，外資4/8單日回補4,848張，金融股防禦性適合不確定時期", exitReason: "4/22以75.2元成交，比掛單75元高0.2元，開盤強勢直接成交", accuracy: "✅", note: "掛單75元實際成交75.2元，執行順利，淨利+374元" },
-  { id: 19, date: "2026-04-16", stock: "南亞 1303", buyPrice: 87.7, sellPrice: null, shares: 200, buyTime: "09:10:00", sellTime: null, pnl: 260, status: "open", entryReason: "外資5日買超88,216張，塑化轉型電子材料，MACD底部翻轉，J值超賣反彈，五檔買盤22,617 vs 賣盤2,904強勢", exitReason: "掛91元賣單中，4/22現價89元，停損85元以下", accuracy: "🔄", note: "09:10開盤三筆成交，實際87.7元優於掛單88.5元，波動大需注意停損" },
-  { id: 20, date: "2026-04-16", stock: "國巨 2327", buyPrice: 312.0, sellPrice: null, shares: 50, buyTime: "09:10:00", sellTime: null, pnl: 625, status: "open", entryReason: "三大法人5日買超84,060張，AI被動元件需求明確，外資+投信+自營商同步加碼", exitReason: "掛328元賣單中，4/22現價324.5元，停損312元以下", accuracy: "🔄", note: "09:10開盤成交，實際312元優於掛單320元，節省400元成本" },
-];
-
 const AL = { "✅": "準確", "⚠️": "部分準確", "❌": "錯誤", "🔄": "進行中" };
 const AB = { "✅": "#1a2e1a", "⚠️": "#2e2000", "❌": "#2e0a0a", "🔄": "#0a1e2e" };
 const AC = { "✅": "#ff4d4d", "⚠️": "#ffaa00", "❌": "#4dff88", "🔄": "#5ac8fa" };
@@ -34,95 +11,81 @@ const pc = v => v > 0 ? "#ff4d4d" : v < 0 ? "#4dff88" : "#8e8e93";
 const pt = v => `${v > 0 ? "+" : ""}${v.toLocaleString()}`;
 const C = { bg: "#1c1c1e", sf: "#2c2c2e", sf2: "#3a3a3c", bd: "#48484a", tx: "#e5e5ea", sub: "#8e8e93", ac: "#c0c0c0", bl: "#5ac8fa" };
 
+// 只讀取，不寫回（避免 INITIAL_TRADES bug）
 async function fetchTrades() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/trades?order=id.asc`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/trades?order=date.desc,id.desc`, {
       headers: {
         "apikey": SUPABASE_KEY,
         "Authorization": `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json"
       }
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error("Supabase 回應錯誤", res.status);
+      return { ok: false, error: `HTTP ${res.status}`, data: [] };
+    }
     const data = await res.json();
-    if (!data || data.length === 0) return null;
-    return data.map(t => ({
-      id: t.id, date: t.date, stock: t.stock,
-      buyPrice: t.buy_price, sellPrice: t.sell_price, shares: t.shares,
-      buyTime: t.buy_time, sellTime: t.sell_time,
-      pnl: t.pnl, status: t.status,
-      entryReason: t.entry_reason, exitReason: t.exit_reason,
-      accuracy: t.accuracy, note: t.note
-    }));
-  } catch (e) { return null; }
-}
-
-async function saveTrades(trades) {
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/trades`, {
-      method: "DELETE",
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-      }
-    });
-    const rows = trades.map(t => ({
-      id: t.id, date: t.date, stock: t.stock,
-      buy_price: t.buyPrice, sell_price: t.sellPrice, shares: t.shares,
-      buy_time: t.buyTime, sell_time: t.sellTime,
-      pnl: t.pnl, status: t.status,
-      entry_reason: t.entryReason, exit_reason: t.exitReason,
-      accuracy: t.accuracy, note: t.note
-    }));
-    await fetch(`${SUPABASE_URL}/rest/v1/trades`, {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify(rows)
-    });
-  } catch (e) {}
+    if (!data || !Array.isArray(data)) {
+      return { ok: false, error: "資料格式錯誤", data: [] };
+    }
+    return {
+      ok: true,
+      error: null,
+      data: data.map(t => ({
+        id: t.id, date: t.date, stock: t.stock,
+        buyPrice: t.buy_price, sellPrice: t.sell_price, shares: t.shares,
+        buyTime: t.buy_time, sellTime: t.sell_time,
+        pnl: t.pnl, status: t.status,
+        entryReason: t.entry_reason, exitReason: t.exit_reason,
+        accuracy: t.accuracy, note: t.note
+      }))
+    };
+  } catch (e) {
+    console.error("fetchTrades 例外:", e);
+    return { ok: false, error: e.message, data: [] };
+  }
 }
 
 export default function TradingJournal() {
-  const [trades, setTrades] = useState(INITIAL_TRADES);
+  const [trades, setTrades] = useState([]); // ✅ 不再用 INITIAL_TRADES 預填
   const [tab, setTab] = useState("dashboard");
   const [sel, setSel] = useState(null);
-  const [loaded, setLoaded] = useState(false);
-  const [syncing, setSyncing] = useState(false);
-  const [dbStatus, setDbStatus] = useState("載入中...");
+  const [loading, setLoading] = useState(true);
+  const [dbStatus, setDbStatus] = useState("⏳ 載入中...");
 
   useEffect(() => {
     (async () => {
-      setSyncing(true);
-      const remote = await fetchTrades();
-      if (remote && remote.length > 0) {
-        setTrades(remote);
-        setDbStatus("✅ 已連線 Supabase");
+      setLoading(true);
+      const result = await fetchTrades();
+      if (result.ok) {
+        setTrades(result.data);
+        setDbStatus(`✅ 已連線 Supabase（${result.data.length} 筆）`);
       } else {
-        await saveTrades(INITIAL_TRADES);
-        setDbStatus("✅ 資料已初始化");
+        setTrades([]);
+        setDbStatus(`❌ 載入失敗：${result.error}`);
       }
-      setSyncing(false);
-      setLoaded(true);
+      setLoading(false);
     })();
   }, []);
 
-  useEffect(() => {
-    if (!loaded) return;
-    saveTrades(trades);
-  }, [trades, loaded]);
+  // ✅ 不再寫 useEffect 自動寫回 Supabase（避免 DELETE 災難）
+  // 新增/編輯交易要走獨立按鈕，未來再加
 
-  const allTrades = trades.filter(t => t.pnl !== 0 || t.status === "open");
+  // 自動補 accuracy 預設值（資料庫沒填的情況下）
+  const allTrades = trades
+    .filter(t => t.pnl !== 0 || t.status === "open")
+    .map(t => ({
+      ...t,
+      accuracy: t.accuracy || (t.status === "open" ? "🔄" : (t.pnl > 0 ? "✅" : t.pnl < 0 ? "❌" : "⚠️")),
+      note: t.note || "",
+      entryReason: t.entryReason || "—",
+      exitReason: t.exitReason || "—"
+    }));
   const closed = allTrades.filter(t => t.status === "closed");
   const open = allTrades.filter(t => t.status === "open");
-  const realized = closed.reduce((s, t) => s + t.pnl, 0);
-  const unrealized = open.reduce((s, t) => s + t.pnl, 0);
+  const realized = closed.reduce((s, t) => s + (t.pnl || 0), 0);
+  const unrealized = open.reduce((s, t) => s + (t.pnl || 0), 0);
   const wins = closed.filter(t => t.pnl > 0);
   const losses = closed.filter(t => t.pnl < 0);
   const winRate = closed.length ? Math.round(wins.length / closed.length * 100) : 0;
@@ -144,13 +107,24 @@ export default function TradingJournal() {
     <div onClick={onClick} style={{ background: C.sf, border: `1px solid ${C.bd}`, borderRadius: 10, ...style }}>{children}</div>
   );
 
+  if (loading) {
+    return (
+      <div style={{ fontFamily: "-apple-system,sans-serif", background: C.bg, minHeight: "100vh", color: C.tx, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: 16, color: C.ac, marginBottom: 8 }}>⏳ 載入中...</div>
+          <div style={{ fontSize: 11, color: C.sub }}>{dbStatus}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ fontFamily: "-apple-system,sans-serif", background: C.bg, minHeight: "100vh", color: C.tx }}>
       <div style={{ background: C.sf, borderBottom: `1px solid ${C.bd}`, padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
           <div style={{ fontSize: 10, color: C.sub, letterSpacing: 2, textTransform: "uppercase" }}>Ryan · 零股交易</div>
           <div style={{ fontSize: 17, fontWeight: 700, color: C.ac }}>交易日誌</div>
-          <div style={{ fontSize: 9, color: syncing ? "#ffaa00" : "#4dff88", marginTop: 2 }}>{syncing ? "⏳ 同步中..." : dbStatus}</div>
+          <div style={{ fontSize: 9, color: dbStatus.startsWith("✅") ? "#4dff88" : "#ff4d4d", marginTop: 2 }}>{dbStatus}</div>
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: 10, color: C.sub }}>總損益</div>
@@ -184,6 +158,13 @@ export default function TradingJournal() {
             ))}
           </div>
 
+          {trades.length === 0 && (
+            <Box style={{ padding: 20, textAlign: "center", marginBottom: 12 }}>
+              <div style={{ fontSize: 13, color: C.sub }}>📭 目前沒有交易紀錄</div>
+              <div style={{ fontSize: 10, color: C.sub, marginTop: 4 }}>請從 Supabase SQL Editor 匯入資料</div>
+            </Box>
+          )}
+
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
             {[[pie1, "損益分布"], [pie2, "分析準確率"]].map(([data, title], i) => (
               <Box key={i} style={{ padding: 10 }}>
@@ -208,25 +189,29 @@ export default function TradingJournal() {
             ))}
           </div>
 
-          <div style={{ fontSize: 10, color: C.sub, letterSpacing: 2, marginBottom: 8, textTransform: "uppercase" }}>持有中</div>
-          {open.map(t => (
-            <Box key={t.id} style={{ padding: 12, marginBottom: 8, cursor: "pointer" }} onClick={() => { setSel(t); setTab("records"); }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 600 }}>{t.stock}</div>
-                  <div style={{ fontSize: 10, color: C.sub, marginTop: 2 }}>
-                    {t.buyPrice}元 × {t.shares}股
-                    {t.buyTime && <span style={{ marginLeft: 6, color: C.bl }}>⏱ {t.buyTime}</span>}
+          {open.length > 0 && <>
+            <div style={{ fontSize: 10, color: C.sub, letterSpacing: 2, marginBottom: 8, textTransform: "uppercase" }}>持有中（{open.length}）</div>
+            {open.map(t => (
+              <Box key={t.id} style={{ padding: 12, marginBottom: 8, cursor: "pointer" }} onClick={() => { setSel(t); setTab("records"); }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600 }}>{t.stock}</div>
+                    <div style={{ fontSize: 10, color: C.sub, marginTop: 2 }}>
+                      {t.buyPrice}元 × {t.shares}股
+                      {t.buyTime && <span style={{ marginLeft: 6, color: C.bl }}>⏱ {t.buyTime}</span>}
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 17, fontWeight: 700, color: pc(t.pnl) }}>{pt(t.pnl)}</div>
+                    <div style={{ fontSize: 9, color: C.sub }}>未實現</div>
                   </div>
                 </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: pc(t.pnl) }}>{pt(t.pnl)}</div>
-                  <div style={{ fontSize: 9, color: C.sub }}>未實現</div>
-                </div>
-              </div>
-              <div style={{ fontSize: 10, color: C.sub, marginTop: 8, borderTop: `1px solid ${C.bd}`, paddingTop: 6 }}>🎯 {t.exitReason}</div>
-            </Box>
-          ))}
+                {t.exitReason && t.exitReason !== "—" && (
+                  <div style={{ fontSize: 10, color: C.sub, marginTop: 8, borderTop: `1px solid ${C.bd}`, paddingTop: 6 }}>🎯 {t.exitReason}</div>
+                )}
+              </Box>
+            ))}
+          </>}
 
           {best && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 4 }}>
@@ -265,7 +250,7 @@ export default function TradingJournal() {
                 {[["📈 進場原因", sel.entryReason], ["📉 出場原因", sel.exitReason], ["📝 檢討筆記", sel.note]].map(([label, value], i) => (
                   <div key={i} style={{ marginBottom: 10 }}>
                     <div style={{ fontSize: 10, color: C.sub, marginBottom: 4 }}>{label}</div>
-                    <div style={{ background: C.sf2, borderRadius: 8, padding: 10, fontSize: 12, color: C.tx, lineHeight: 1.7 }}>{value}</div>
+                    <div style={{ background: C.sf2, borderRadius: 8, padding: 10, fontSize: 12, color: C.tx, lineHeight: 1.7 }}>{value || "—"}</div>
                   </div>
                 ))}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginTop: 12 }}>
@@ -285,28 +270,34 @@ export default function TradingJournal() {
           ) : (
             <div>
               <div style={{ fontSize: 10, color: C.sub, letterSpacing: 2, marginBottom: 10, textTransform: "uppercase" }}>全部紀錄（{allTrades.length}筆）</div>
-              {[...allTrades].reverse().map(t => (
-                <Box key={t.id} style={{ padding: 12, marginBottom: 8, cursor: "pointer" }} onClick={() => setSel(t)}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontSize: 13, fontWeight: 600 }}>{t.stock}</span>
-                        <span style={{ fontSize: 9, padding: "2px 6px", borderRadius: 10, background: C.sf2, color: t.status === "open" ? "#ffaa00" : C.sub }}>
-                          {t.status === "open" ? "持有中" : "已結"}
-                        </span>
-                      </div>
-                      <div style={{ fontSize: 10, color: C.sub, marginTop: 2 }}>
-                        {t.date}
-                        {t.buyTime && <span style={{ marginLeft: 6, color: C.bl }}>⏱{t.buyTime}</span>}
-                      </div>
-                    </div>
-                    <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 16, fontWeight: 700, color: pc(t.pnl) }}>{pt(t.pnl)}</div>
-                      <div style={{ fontSize: 11 }}>{t.accuracy}</div>
-                    </div>
-                  </div>
+              {allTrades.length === 0 ? (
+                <Box style={{ padding: 20, textAlign: "center" }}>
+                  <div style={{ fontSize: 13, color: C.sub }}>📭 沒有交易紀錄</div>
                 </Box>
-              ))}
+              ) : (
+                allTrades.map(t => (
+                  <Box key={t.id} style={{ padding: 12, marginBottom: 8, cursor: "pointer" }} onClick={() => setSel(t)}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <span style={{ fontSize: 13, fontWeight: 600 }}>{t.stock}</span>
+                          <span style={{ fontSize: 9, padding: "2px 6px", borderRadius: 10, background: C.sf2, color: t.status === "open" ? "#ffaa00" : C.sub }}>
+                            {t.status === "open" ? "持有中" : "已結"}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: 10, color: C.sub, marginTop: 2 }}>
+                          {t.date}
+                          {t.buyTime && <span style={{ marginLeft: 6, color: C.bl }}>⏱{t.buyTime}</span>}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: pc(t.pnl) }}>{pt(t.pnl)}</div>
+                        <div style={{ fontSize: 11 }}>{t.accuracy}</div>
+                      </div>
+                    </div>
+                  </Box>
+                ))
+              )}
             </div>
           )}
         </>}
@@ -330,20 +321,6 @@ export default function TradingJournal() {
                 </div>
               );
             })}
-          </Box>
-
-          <Box style={{ padding: 14, marginBottom: 12 }}>
-            <div style={{ fontSize: 12, color: C.ac, marginBottom: 10 }}>⏱ 成交時間分析</div>
-            {[
-              ["09:10 開盤", "最佳時段，零股集中撮合，流動性最高", "#1a2e1a", "#2a4a2a", "#ff4d4d"],
-              ["09:10~11:30 上午盤", "可接受，流動性正常", C.sf2, C.bd, C.tx],
-              ["13:00+ 下午盤", "流動性極差，停損務必在上午執行", "#2e0a0a", "#4a2a2a", "#4dff88"],
-            ].map(([label, desc, bg, border, color], i) => (
-              <div key={i} style={{ padding: "8px 10px", borderRadius: 8, marginBottom: 6, background: bg, border: `1px solid ${border}` }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color }}>{label}</div>
-                <div style={{ fontSize: 10, color: C.sub, marginTop: 2 }}>{desc}</div>
-              </div>
-            ))}
           </Box>
 
           {[
