@@ -232,7 +232,34 @@ export default function TradingJournal() {
         {tab === "records" && <>
           {sel ? (
             <div>
-              <button onClick={() => setSel(null)} style={{ background: C.sf2, border: `1px solid ${C.bd}`, color: C.sub, padding: "6px 12px", borderRadius: 8, cursor: "pointer", marginBottom: 12, fontSize: 11 }}>← 返回</button>
+              {(() => {
+                const idx = allTrades.findIndex(t => t.id === sel.id);
+                const prev = idx > 0 ? allTrades[idx - 1] : null;
+                const next = idx < allTrades.length - 1 ? allTrades[idx + 1] : null;
+                return (
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, gap: 6 }}>
+                    <button onClick={() => prev && setSel(prev)} disabled={!prev}
+                      style={{
+                        background: prev ? C.sf2 : C.sf, border: `1px solid ${C.bd}`,
+                        color: prev ? C.tx : C.sub, padding: "6px 10px", borderRadius: 8,
+                        cursor: prev ? "pointer" : "not-allowed", fontSize: 11, opacity: prev ? 1 : 0.4
+                      }}>← 上一筆</button>
+
+                    <button onClick={() => setSel(null)}
+                      style={{ background: C.sf2, border: `1px solid ${C.bd}`, color: C.sub,
+                        padding: "6px 10px", borderRadius: 8, cursor: "pointer", fontSize: 11 }}>
+                      返回列表（{idx + 1}/{allTrades.length}）
+                    </button>
+
+                    <button onClick={() => next && setSel(next)} disabled={!next}
+                      style={{
+                        background: next ? C.sf2 : C.sf, border: `1px solid ${C.bd}`,
+                        color: next ? C.tx : C.sub, padding: "6px 10px", borderRadius: 8,
+                        cursor: next ? "pointer" : "not-allowed", fontSize: 11, opacity: next ? 1 : 0.4
+                      }}>下一筆 →</button>
+                  </div>
+                );
+              })()}
               <Box style={{ padding: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                   <div>
