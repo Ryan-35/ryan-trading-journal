@@ -8,7 +8,7 @@ const AL = { "✅": "準確", "⚠️": "部分準確", "❌": "錯誤", "🔄":
 const AB = { "✅": "#1a2e1a", "⚠️": "#2e2000", "❌": "#2e0a0a", "🔄": "#0a1e2e" };
 const AC = { "✅": "#ff4d4d", "⚠️": "#ffaa00", "❌": "#4dff88", "🔄": "#5ac8fa" };
 const pc = v => v > 0 ? "#ff4d4d" : v < 0 ? "#4dff88" : "#8e8e93";
-const pt = v => `${v > 0 ? "+" : ""}${v.toLocaleString()}`;
+const pt = v => { const n = Number(v) || 0; return `${n > 0 ? "+" : ""}${n.toLocaleString()}`; };
 const C = { bg: "#1c1c1e", sf: "#2c2c2e", sf2: "#3a3a3c", bd: "#48484a", tx: "#e5e5ea", sub: "#8e8e93", ac: "#c0c0c0", bl: "#5ac8fa" };
 
 // 只讀取，不寫回（避免 INITIAL_TRADES bug）
@@ -218,12 +218,12 @@ export default function TradingJournal() {
               <Box style={{ padding: 12 }}>
                 <div style={{ fontSize: 10, color: C.sub, marginBottom: 4 }}>🏆 最佳</div>
                 <div style={{ fontSize: 11, color: C.tx }}>{best.stock}</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: "#ff4d4d" }}>+{best.pnl.toLocaleString()}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "#ff4d4d" }}>+{(best.pnl || 0).toLocaleString()}</div>
               </Box>
               {worst && <Box style={{ padding: 12 }}>
                 <div style={{ fontSize: 10, color: C.sub, marginBottom: 4 }}>⚠️ 最差</div>
                 <div style={{ fontSize: 11, color: C.tx }}>{worst.stock}</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: "#4dff88" }}>{worst.pnl.toLocaleString()}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "#4dff88" }}>{(worst.pnl || 0).toLocaleString()}</div>
               </Box>}
             </div>
           )}
